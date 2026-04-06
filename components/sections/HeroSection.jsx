@@ -119,9 +119,9 @@ export default function NorthernFoxHeroAnimated() {
 
           <div
             ref={overlayContainerRef}
-            className="absolute bottom-10 left-7 z-20"
+            className="absolute bottom-7 left-6 z-20"
           >
-            <div className="bg-black/30 text-white backdrop-blur-md px-4 py-2 rounded-md">
+            <div className="bg-black/10 text-white backdrop-blur-md px-4 py-2 rounded-md">
               <div
                 ref={overlayWordsRef}
                 className="flex flex-wrap text-4xl font-semibold tracking-tight"
@@ -164,7 +164,7 @@ export default function NorthernFoxHeroAnimated() {
 
             <p
               ref={paragraphRef}
-              className="mt-4 text-[#0b2249]/85 text-[18px] leading-[1.9] font-light max-w-md"
+              className="mt-4 text-[#0b2249]/85 text-[18px] leading-[1.6] font-light max-w-md"
             >
               Мы не просто перевозим грузы — мы берем на себя всю логистику: от
               верификации поставщиков в Китае до стопроцентной страховки и
