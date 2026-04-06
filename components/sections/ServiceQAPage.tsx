@@ -4,11 +4,13 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import ProblemSolutionCard from "../helpers/SolutionCard";
 
+// ---------- Types ----------
 interface QAItem {
   question: string;
   answer: string;
 }
 
+// ---------- Data ----------
 const qaItems: QAItem[] = [
   {
     question: "Нужен надёжный представитель в Китае?",
@@ -28,10 +30,9 @@ const qaItems: QAItem[] = [
   },
 ];
 
-export default function ServiceQAPage() {
+export default function Home() {
   const rowsRef = useRef<HTMLDivElement[]>([]);
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
 
   const addToRefs = (el: HTMLDivElement | null) => {
     if (el && !rowsRef.current.includes(el)) {
@@ -87,22 +88,18 @@ export default function ServiceQAPage() {
   }, []);
 
   return (
-    <main 
-      id="home-component"
-      ref={containerRef}
-      className="min-h-screen pt-20 px-4 flex flex-col items-center relative z-20 bg-black"
-    >
-      {/* <div className="text-center w-full px-2 pb-25">
+    <main className="min-h-screen pt-20 px-4 flex flex-col items-center">
+      <div className="text-center w-full px-2 pb-25 ">
         <h1
           ref={headingRef}
-          className="text-3xl text-[#0b2249] md:text-4xl font-light text-start leading-8 tracking-wide mb-4"
+          className="text-3xl text-white md:text-4xl font-light text-start leading-8 tracking-wide mb-4"
         >
           Комплексные решения для вашего бизнеса
         </h1>
-        <p className="text-[#0b2249]/85 text-[.9rem] max-w-2xl text-start font-light tracking-wide leading-5 mx-auto">
+        <p className="text-white/85 text-[.9rem] max-w-2xl text-start font-light tracking-wide leading-5 mx-auto">
           Полный спектр услуг по логистике, таможенному оформлению и налоговой оптимизации
         </p>
-      </div> */}
+      </div>
       <div className="max-w-5xl w-full">
         <div className="flex flex-col gap-3 md:gap-6">
           {qaItems.map((item, index) => (

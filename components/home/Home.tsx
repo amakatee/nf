@@ -6,6 +6,7 @@ import DeliveryForm from '../sections/DelieveryForm'
 import ServiceQAPage from '../sections/ServiceQAPage'
 import NeonSection from '../helpers/NeonSection'
 import WhyUs from '../sections/WhyUs'
+import Navbar from '../navbar'
 
 // const slides =[
 //   {
@@ -153,17 +154,12 @@ function Home() {
 
       
 {/*       
-       <NorthernFoxNavbar /> */}
-        <HeroSection />
+           
         {/* <Slider slides={slides} /> */}
-       
-    
-       
-        
-
-        {/* <WhyChooseUs /> */}
-
-     <NeonSection>
+       {/* <WhyChooseUs /> */}
+       <Navbar />
+       <HeroSection />
+        <NeonSection>
      
       <ServiceQAPage />
       <ShippingMethodsPage   />

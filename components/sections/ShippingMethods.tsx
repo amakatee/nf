@@ -80,74 +80,52 @@ export default function ShippingMethodsPage() {
   useEffect(() => {
     const cards = cardsRef.current;
     if (cards.length !== 4) return;
-  
+
     const ctx = gsap.context(() => {
-      const getVh = () => window.innerHeight * 0.01;
-  
-      const PEEK_VH = 10;
-      const INITIAL_GAP_VH = 36;
-  
-      const vh = getVh();
-  
-      // convert to PIXELS ONCE (critical for performance)
-      const PEEK = PEEK_VH * vh;
-      const INITIAL_GAP = INITIAL_GAP_VH * vh;
-      const DELTA = INITIAL_GAP - PEEK;
-  
-      // ----------------------------------------------------------------
-      // INITIAL STATE (GPU friendly)
+      const PEEK_VH = 10;           // 10vh видимой полоски предыдущей карточки (по ТЗ)
+      const INITIAL_GAP_VH = 36;    // начальный равный зазор (подстрой под скриншот IMG_1964 — "small gaps")
+      const DELTA_VH = INITIAL_GAP_VH - PEEK_VH; // сколько сдвигается вся группа за одну фазу
+
+      // === 1. INITIAL STATE: равные зазоры + z-index (поздние карточки сверху) ===
       cards.forEach((card, index) => {
         gsap.set(card, {
-          y: index * INITIAL_GAP,
+          y: `${index * INITIAL_GAP_VH}vh`,
           zIndex: index + 1,
-          force3D: true,
-          willChange: 'transform',
-          backfaceVisibility: 'hidden',
+          scale: 1,
         });
       });
-  
-      // ----------------------------------------------------------------
+
+      // === 2. MASTER TIMELINE + SCROLLTRIGGER (pin + 1:1 scrub) ===
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
-          end: `+=${(cards.length - 1) * window.innerHeight * 1.5}`,
-          scrub: 1,
+          end: `+=${(cards.length - 1) * 150}vh`, // 3 фазы × 100vh = идеально под прямой скролл
+          scrub: true,
           pin: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          // markers: true, // раскомментировать для отладки позиций
         },
       });
-  
-      // CASCADE (same logic, px instead of vh)
+
+      // === 3. CASCADE АНИМАЦИЯ: в каждой фазе двигается ГРУППА (ведущая + все ниже) ===
+      // Это сохраняет равные зазоры внутри группы до остановки ведущей карточки
       for (let phase = 1; phase < cards.length; phase++) {
-        const group = cards.slice(phase);
-  
+        const group = cards.slice(phase); // ведущая + все ниже
+
         tl.to(
           group,
           {
-            y: `-=${DELTA}`,
-            ease: "none",
-            duration: 1,
+            y: `-=${DELTA_VH}vh`,   // все в группе сдвигаются НА ОДНО И ТО ЖЕ расстояние
+            ease: "none",           // линейно = 100% контроль скролла
+            duration: 1,            // 1 единица таймлайна = 100vh скролла
           },
-          phase - 1
+          phase - 1                 // фазы идут строго последовательно (без пересечения)
         );
       }
-  
-      // ----------------------------------------------------------------
-      // refresh values on resize/orientation change (important for vh→px)
-      const handleRefresh = () => ScrollTrigger.refresh();
-      window.addEventListener("resize", handleRefresh);
-      window.addEventListener("orientationchange", handleRefresh);
-  
-      ScrollTrigger.refresh();
-  
-      return () => {
-        window.removeEventListener("resize", handleRefresh);
-        window.removeEventListener("orientationchange", handleRefresh);
-      };
     }, sectionRef);
-  
+
     return () => ctx.revert();
   }, []);
 
